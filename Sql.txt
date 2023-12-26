@@ -1,0 +1,121 @@
+Name: Muqadas Arshad
+Roll No: BITF20M023
+***************************************************************************************************************
+Create user Table:
+CREATE TABLE user (
+    userid INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+);
+
+Create students Table:
+	CREATE TABLE students (
+    	std_id INT AUTO_INCREMENT PRIMARY KEY,
+    	full_name VARCHAR(255) NOT NULL,
+    	roll_number VARCHAR(50) NOT NULL,
+    	email VARCHAR(100) NOT NULL,
+    	gender VARCHAR(10) NOT NULL,
+    	dob DATE NOT NULL,
+    	city VARCHAR(50) NOT NULL,
+    	interest VARCHAR(50) NOT NULL,
+    	department VARCHAR(50) NOT NULL,
+    	degree_title VARCHAR(50) NOT NULL,
+    	subject VARCHAR(100) NOT NULL,
+    	start_date DATE NOT NULL,
+    	end_date DATE NOT NULL
+	);
+
+
+///Query for Login:////
+SELECT * FROM user WHERE email = %s AND password = %s', (email, password,)
+
+
+
+////Query for registration:///
+INSERT INTO user (name, email, password) VALUES (%s, %s, %s)', (userName, email, password,)
+
+
+////Query for add_student:////
+INSERT INTO students (full_name, roll_number, email, gender, dob, city, interest, department, degree_title, subject, start_date, end_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+(full_name, roll_number, email, gender, dob, city, interest, department, degree_title, subject, start_date, end_date)
+
+
+////Query to show the list of Students:////
+SELECT * FROM students
+
+
+/////Query to update(edit) the Specific student:////
+•	1st select the specific student that is supposed to  update
+•	And then update 
+SELECT * FROM students WHERE std_id = %s', (student_id,)
+
+UPDATE students SET
+    full_name=%s, roll_number=%s, email=%s, gender=%s, dob=%s,
+    city=%s, interest=%s, department=%s, degree_title=%s, subject=%s,
+    start_date=%s, end_date=%s
+    WHERE std_id=%s, (full_name, roll_number, email, gender, dob, city, interest, department, degree_title, subject,
+start_date, end_date, student_id)
+
+
+////Query to view the Specific student:///
+SELECT * FROM students WHERE std_id = %s', (student_id,)
+
+
+///Query to delete the specific student:////
+DELETE FROM students WHERE std_id = %s", (student_id,)
+
+
+///Query to find the distinct interest (count of interest):///
+SELECT COUNT(DISTINCT interest) as interest_count FROM students
+
+
+////Query to find the top 5 interest:////
+SELECT interest, COUNT(interest) as count FROM students GROUP BY interest ORDER BY count DESC LIMIT %s', (limit,)
+****	Here limit =5
+
+///Query to find the bottom 5 interest:////
+SELECT interest, COUNT(interest) as count FROM students GROUP BY interest ORDER BY count ASC LIMIT %s', (limit,)
+****	Here limit =5
+
+///Query to get the unique interest (for dropdown option of interest):////
+SELECT DISTINCT interest FROM students
+
+
+///Query for Gender Distribution:///
+SELECT gender, COUNT(gender) as count FROM students GROUP BY gender
+
+
+///Query for Degree Distribution:///
+SELECT degree_title, COUNT(degree_title) as count FROM students GROUP BY degree_title
+
+
+///Query for Department Distribution:///
+SELECT department, COUNT(department) as count FROM students GROUP BY department
+
+
+///Query for daily submission distribution:///
+SELECT DATE(start_date) AS submission_date, COUNT(*) AS count
+    FROM students
+    WHERE start_date >= %s
+    GROUP BY submission_date
+    ORDER BY submission_date, (datetime.now() - timedelta(days=30),)
+
+
+///Query for Provincial distribution:///
+SELECT city, COUNT(city) as count FROM students GROUP BY city
+
+
+///Query for Age Distribution:///
+SELECT dob FROM students
+
+
+///Query for Students Status Count:///
+SELECT 
+    COUNT(CASE WHEN end_date >= CURDATE() THEN 1 END) AS currently_studying,
+    COUNT(CASE WHEN start_date >= CURDATE() AND end_date >= CURDATE() THEN 1 END) AS recently_enrolled,
+    COUNT(CASE WHEN end_date >= CURDATE() AND end_date <= CURDATE() + INTERVAL 30 DAY THEN 1 END) AS about_to_graduate,
+    COUNT(CASE WHEN end_date < CURDATE() THEN 1 END) AS graduated
+FROM students
+
+

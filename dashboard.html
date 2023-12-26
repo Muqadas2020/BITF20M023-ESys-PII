@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>DashBoard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+
+        .navbar-nav .nav-item .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-nav .nav-item.active .nav-link {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .interest-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            background-color: #e75480;
+
+            color: white;
+        }
+
+        .box {
+            background-color: #e75480;
+
+            color: white;
+        }
+
+        #provincialChartContainer,#departmentChartContainer,#genderChartContainer,
+        #submissionChartContainer ,#last30DaysChartContainer,#last24HoursChartContainer,
+        #ageChartContainer,#degreeChartContainer{
+            width: 430px;
+            height: 400px;
+        }
+
+        #provincialChartContainer canvas,#departmentChartContainer canvas,#genderChartContainer canvas,
+         #submissionChartContainer canvas,#last30DaysChartContainer canvas,#last24HoursChartContainer canvas,
+        #ageChartContainer canvas,#degreeChartContainer canvas{
+
+            width: 400px;
+            height: 400px;
+        }
+        .grey-background {
+        background-color: grey;
+        color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('add_student_page') }}">Add Student</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('students_list') }}">Students List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="row text-center">
+        <h4> Welcome to the Student Interest Management System, <strong>{{ session.name }}</strong>!</h4>
+    </div>
+
+    <div class="row">
+           <div class="col-md-4 mb-4">
+                <div class="card card-body p-3">
+                    <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Distinct Interests</h5></center>
+                    <table class="table table-borderless table-hover mt-3">
+                        <tbody>
+                                <tr class="grey-background">
+                                   <td><b>Interest Name</b></td>
+                                   <td><b>Count</b></td>
+                                </tr>
+                            {% for interest, count in distinct_interests.items() %}
+                                <tr>
+                                    <td>{{ interest }}</td>
+                                    <td>{{ count }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        <div class="col-md-4 mb-4">
+            <div class="card card-body p-3">
+                <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Top Five Interests</h5></center>
+                <table class="table table-borderless table-hover mt-3">
+                    <thead>
+                        <tr class="grey-background">
+                            <td><b>Interest Name</b></td>
+                            <td><b>Count</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for interest in top_interests %}
+                            <tr>
+                                <td>{{ interest.interest }}</td>
+                                <td>{{ interest.count }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card card-body p-3">
+                <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Bottom Five Interests</h5></center>
+                <table class="table table-borderless table-hover mt-3">
+                    <thead>
+                        <tr class="grey-background">
+                            <td><b>Interest Name</b></td>
+                            <td><b>Count</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for interest in bottom_interest %}
+                            <tr>
+                                <td>{{ interest.interest }}</td>
+                                <td>{{ interest.count }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ">
+    <div class="col-md-4 mb-4">
+        <div class="card card-body p-3">
+            <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Most Active  hours in last 30 days</h5></center>
+            <table class="table table-borderless table-hover mt-3">
+                    <thead>
+                        <tr class="grey-background">
+                            <td><b>Activity Time</b></td>
+                            <td><b> Activity Count</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                            <tr>
+                                <td>15:00</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>20:00</td>
+                                <td>1</td>
+                            </tr>
+
+                    </tbody>
+                </table>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card card-body p-3">
+            <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Least Active hours in last 30 days</h5></center>
+            <table class="table table-borderless table-hover mt-3">
+                    <thead>
+                        <tr class="grey-background">
+                            <td><b>Activity Time</b></td>
+                            <td><b> Activity Count</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                            <tr>
+                                <td>10:00</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>12:00</td>
+                                <td>1</td>
+                            </tr>
+
+                    </tbody>
+                </table>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card card-body p-3">
+            <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Dead hours in last 30 days</h5></center>
+            <table class="table table-borderless table-hover mt-3">
+                    <thead>
+                        <tr class="grey-background">
+                            <td><b>Activity Time</b></td>
+                            <td><b> Activity Count</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                            <tr>
+                                <td>9:00</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>24:00</td>
+                                <td>3</td>
+                            </tr>
+
+
+                    </tbody>
+                </table>
+        </div>
+    </div>
+</div>
+     <div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card card-body p-3" style="height:400px;">
+            <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Students Status Grid</h5></center>
+            <table class="table table-borderless table-hover mt-3">
+                <thead>
+                    <tr class="grey-background">
+                        <td><b>Status</b></td>
+                        <td><b>Count</b></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Currently Studying</td>
+                        <td>{{ student_counts.currently_studying | default(0) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Recently Enrolled</td>
+                        <td>{{ student_counts.recently_enrolled | default(0) }}</td>
+                    </tr>
+                    <tr>
+                        <td>About to Graduate</td>
+                        <td>{{ student_counts.about_to_graduate | default(0) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Graduated</td>
+                        <td>{{ student_counts.graduated | default(0) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+         <div class="col-md-4 mb-4">
+            <div class="card card-body p-3" id="last30DaysChartContainer" >
+                <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Last 30 Days Chart</h5></center>
+                <canvas id="last30DaysChart" width="300" height="300"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card card-body p-3" id="last24HoursChartContainer">
+                <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Last 24 Hours Chart</h5></center>
+                <canvas id="last24HoursChart" width="300" height="300"></canvas>
+            </div>
+        </div>
+</div>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card card-body p-3" id="provincialChartContainer">
+                <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Provincial Distribution</h5></center>
+                <canvas id="provincialChart" width="200" height="200"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card card-body p-3" id="departmentChartContainer">
+                <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Department Distribution</h5></center>
+                <canvas id="departmentChart" width="300" height="300"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card card-body p-3" id="genderChartContainer">
+                <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Gender Distribution</h5></center>
+                <canvas id="genderChart" width="300" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card card-body p-3" id="degreeChartContainer">
+                <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Degree Title Distribution</h5></center>
+                <canvas id="degreeChart" width="300" height="300"></canvas>
+            </div>
+        </div>
+       <div class="col-md-4 mb-4">
+            <div class="card card-body p-3" id="ageChartContainer">
+                <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Age Distribution</h5></center>
+                <canvas id="ageChart"></canvas>
+            </div>
+        </div>
+    <div class="col-md-4 mb-4">
+    <div class="card card-body p-3" id="submissionChartContainer">
+        <center><h5 class="text-sm mb-0 text-capitalize font-weight-bold">Daily Submission in Last 30 Days</h5></center>
+        <canvas id="submissionChart"></canvas>
+    </div>
+</div>
+</div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // Provincial Pie Chart
+    document.addEventListener('DOMContentLoaded', function () {
+        var provincialData = {{ provincial_distribution|tojson }};
+        var provinces = provincialData.map(function (item) { return item.city; });
+        var counts = provincialData.map(function (item) { return item.count; });
+
+        var cityColors = {
+            'Karachi': '#e75480',
+            'Lahore': '#5bc0de',
+            'Multan': '#808000',
+            'Islamabad': '#f0ad4e',
+            'Peshawar': '#d9534f',
+            'Quetta': '#428bca',
+            'Faisalabad': '#0275d8',
+            'Rawalpindi': '#4b0082',
+            'Gujranwala': '#9932cc',
+            'Sialkot': '#008080',
+            'Hyderabad': '#a0522d',
+            'Sargoda': '#2f4f4f',
+            'Sahiwal': '#ee82ee',
+            'Sheikupura': '#ffd700',
+            'Rahim Yar Khan': '#40e0d0',
+            'Kasur': '#ee82ee',
+        };
+
+        var ctxProvincial = document.getElementById('provincialChart').getContext('2d');
+        var myPieChartProvincial = new Chart(ctxProvincial, {
+            type: 'pie',
+            data: {
+                labels: provinces,
+                datasets: [{
+                    data: counts,
+                    backgroundColor: provinces.map(function (city) { return cityColors[city]; }),
+                }]
+            },
+            options: {
+                responsive: true,
+
+
+
+            }
+        });
+
+        // Department pie Chart
+        var departmentData = {{ department_distribution|tojson }};
+        var departments = departmentData.map(function (item) { return item.department; });
+        var departmentCounts = departmentData.map(function (item) { return item.count; });
+
+        var departmentColors = ['#e75480', '#5bc0de', '#808000', '#f0ad4e', '#d9534f'];  // Add more colors as needed
+
+        var ctxDepartment = document.getElementById('departmentChart').getContext('2d');
+        var myBarChartDepartment = new Chart(ctxDepartment, {
+            type: 'pie',
+            data: {
+                labels: departments,
+                datasets: [{
+                    label: 'Department Distribution',
+                    data: departmentCounts,
+                    backgroundColor: departmentColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        // Gender Pie Chart
+        var genderData = {{ gender_distribution|tojson }};
+        var genders = genderData.map(function (item) { return item.gender; });
+        var genderCounts = genderData.map(function (item) { return item.count; });
+
+        var genderColors = ['#e75480', '#5bc0de'];  // Add more colors as needed
+
+        var ctxGender = document.getElementById('genderChart').getContext('2d');
+        var myPieChartGender = new Chart(ctxGender, {
+            type: 'pie',
+            data: {
+                labels: genders,
+                datasets: [{
+                    label: 'Gender Distribution',
+                    data: genderCounts,
+                    backgroundColor: genderColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+         // Degree Title Pie Chart
+    var degreeTitleData = {{ degree_title_distribution|tojson }};
+    var degreeTitles = degreeTitleData.map(function (item) { return item.degree_title; });
+    var degreeTitleCounts = degreeTitleData.map(function (item) { return item.count; });
+
+    var degreeTitleColors = ['#e75480', '#5bc0de', '#808000', '#f0ad4e', '#d9534f'];  // Add more colors as needed
+
+    var ctxDegreeTitle = document.getElementById('degreeChart').getContext('2d');
+    var myPieChartDegreeTitle = new Chart(ctxDegreeTitle, {
+        type: 'pie',
+        data: {
+            labels: degreeTitles,
+            datasets: [{
+                label: 'Degree Title Distribution',
+                data: degreeTitleCounts,
+                backgroundColor: degreeTitleColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+     // Submission Line Chart
+    var submissionData = {{ daily_submission|tojson }};
+    var submissionDates = submissionData.map(function (item) { return item.submission_date; });
+    var submissionCounts = submissionData.map(function (item) { return item.count; });
+
+    var ctxSubmission = document.getElementById('submissionChart').getContext('2d');
+    var myLineChartSubmission = new Chart(ctxSubmission, {
+        type: 'line',
+        data: {
+            labels: submissionDates,
+            datasets: [{
+                label: 'Daily Submission',
+                data: submissionCounts,
+                borderColor: '#e75480', // Line color
+                borderWidth: 1,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    },
+                    ticks: {
+                        maxRotation: 0
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+   // Age distribution
+        var ageLabels = ['18-20', '21-23', '24-26', '27-29', '30+'];
+        var ageCounts = [15, 25, 20, 10, 5]; // Example hardcoded data
+
+        var ctxAge = document.getElementById('ageChart').getContext('2d');
+        var myBarChartAge = new Chart(ctxAge, {
+            type: 'bar',
+            data: {
+                labels: ageLabels,
+                datasets: [{
+                    label: 'Number of Students',
+                    data: ageCounts,
+                    backgroundColor: '#e75480',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        title: {
+                            display: true,
+                            text: 'Age'
+                        }
+                    }],
+                    yAxes: [{
+                        title: {
+                            display: true,
+                            text: 'Number of Students'
+                        }
+                    }]
+                }
+            }
+        });
+
+        //last 30
+        const last30DaysData = {
+              submissionDates: ['2023-12-01', '2023-12-02', '2023-12-03', /* ... */],
+              submissionCounts: [5, 10, 8, /* ... */],
+            };
+
+            var ctxLast30Days = document.getElementById('last30DaysChart').getContext('2d');
+            var myLineChartLast30Days = new Chart(ctxLast30Days, {
+              type: 'line',
+              data: {
+                labels: last30DaysData.submissionDates,
+                datasets: [{
+                  label: 'Daily Submission',
+                  data: last30DaysData.submissionCounts,
+                  borderColor: '#e75480', // Line color
+                  borderWidth: 1,
+                  fill: false
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  xAxes: [{
+                    type: 'time',
+                    time: {
+                      unit: 'day'
+                    },
+                    ticks: {
+                      maxRotation: 0
+                    }
+                  }],
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true
+                    }
+                  }]
+                }
+              }
+            });
+
+            //last 24
+            const last24HoursData = {
+              submissionDates: ['2023-12-24 00:00:00', '2023-12-24 00:15:00', '2023-12-24 00:30:00', /* ... */],
+              submissionCounts: [2, 5, 1, /* ... */],
+            };
+
+            var ctxLast24Hours = document.getElementById('last24HoursChart').getContext('2d');
+            var myLineChartLast24Hours = new Chart(ctxLast24Hours, {
+              type: 'line',
+              data: {
+                labels: last24HoursData.submissionDates,
+                datasets: [{
+                  label: 'Hourly Submission',
+                  data: last24HoursData.submissionCounts,
+                  borderColor: '#5bc0de', // Line color
+                  borderWidth: 1,
+                  fill: false
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  xAxes: [{
+                    type: 'time',
+                    time: {
+                      unit: 'hour'
+                    },
+                    ticks: {
+                      maxRotation: 0
+                    }
+                  }],
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true
+                    }
+                  }]
+                }
+              }
+            });
+            });
+</script>
+
+
+</body>
+
+</html>

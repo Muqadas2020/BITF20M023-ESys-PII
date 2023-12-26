@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Students List</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+
+     <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+
+        .navbar-nav .nav-item .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-nav .nav-item.active .nav-link {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        #student-details {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
+
+        .details-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .details-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .details-label {
+            font-weight: bold;
+            width: 40%;
+        }
+
+        .details-data {
+            width: 60%;
+        }
+
+
+
+        .back-btn-container {
+            text-align: center;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+            border-spacing: 0;
+            font-size: 14px;
+            color: #333;
+            background-color: #fff;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dataTables_wrapper {
+            margin-top: 20px;
+        }
+
+        .dataTables_filter label {
+            font-weight: bold;
+        }
+
+        .dataTables_filter input {
+            width: 200px;
+            margin-left: 10px;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            padding: 5px;
+            margin-bottom: 8px;
+        }
+
+        .date-cell {
+            white-space: nowrap;
+        }
+
+        /* Button Styles */
+        button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* Button Colors */
+        .v-btn {
+            background-color: #28a745; /* Green */
+            border: none;
+        }
+
+        .e-btn {
+            background-color: #ffc107; /* Yellow */
+            border: none;
+        }
+
+        .d-btn {
+            background-color: #dc3545; /* Red */
+            border: none;
+        }
+
+
+        h2 {
+            text-align: center;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('add_student_page') }}">Add Student</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="success-messages">
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+<table id="show">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Roll Number</th>
+            <th>DOB</th>
+            <th>City</th>
+            <th>Interest</th>
+            <th>Department</th>
+            <th>Degree</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students %}
+            <tr>
+                <td>{{ student.id }}</td>
+                <td>{{ student.full_name }}</td>
+                <td>{{ student.roll_number }}</td>
+                <td class="date-cell">{{ student.dob.strftime('%Y/%m/%d') }}</td>
+                <td>{{ student.city }}</td>
+                <td>{{ student.interest }}</td>
+                <td>{{ student.department }}</td>
+                <td>{{ student.degree_title }}</td>
+                <td class="action-buttons">
+                    <button class="v-btn" onclick="viewAction({{ student.std_id }})">View</button>
+                    <button class="e-btn" onclick="editAction({{ student.std_id }})">Edit</button>
+                    <button class="d-btn" onclick="deleteAction({{ student.std_id }})">Delete</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    $(document).ready(function() {
+        $('#show').DataTable({
+            "ajax": {
+                "url": "/get_students",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "std_id" },
+                { "data": "full_name" },
+                { "data": "roll_number" },
+                {
+                    "data": "dob",
+                    "render": function (data) {
+                        return moment(data).format('YYYY-MM-DD');
+                    }
+                },
+                { "data": "city" },
+                { "data": "interest" },
+                { "data": "department" },
+                { "data": "degree_title" },
+                {
+                    "data": null,
+                    "render": function (data, type, full, meta) {
+                        return '<button class="v-btn" onclick="viewAction(' + data.std_id + ')">View</button>' +
+                               '<button class="e-btn" onclick="editAction(' + data.std_id + ')">Edit</button>' +
+                               '<button class="d-btn" onclick="deleteAction(' + data.std_id + ')">Delete</button>';
+                    }
+                }
+            ],
+            "dom": 'lfrtip',
+            "buttons": [
+                {
+                    extend: 'first',
+                    text: 'First Page',
+                    className: 'btn btn-primary',
+                },
+                {
+                    extend: 'previous',
+                    text: 'Previous',
+                    className: 'btn btn-primary',
+                },
+                {
+                    extend: 'next',
+                    text: 'Next',
+                    className: 'btn btn-primary',
+                },
+                {
+                    extend: 'last',
+                    text: 'Last Page',
+                    className: 'btn btn-primary',
+                }
+            ]
+        });
+    });
+
+    function viewAction(studentId) {
+    // Redirect to the view page for the selected student
+    window.location.href = "/view?student_id=" + studentId;
+    }
+
+    function editAction(studentId) {
+        // Redirect to the edit(update) page for the selected student
+        window.location.href = "/edit_button_action?student_id=" + studentId;
+    }
+
+    function deleteAction(studentId) {
+            // Use AJAX to send a request to the server
+            $.ajax({
+                type: "POST",
+                url: "/ajax_delete?student_id=" + studentId,
+                success: function (response) {
+                    if (response.status === "success") {
+                        // Show success notification
+                        showNotification('success', response.message);
+                        // Reload the students list or update the UI as needed
+                        location.reload();
+                    } else {
+                        // Show error notification
+                        showNotification('error', 'Error: ' + response.message);
+                    }
+                },
+                error: function () {
+                    // Show error notification
+                    showNotification('error', 'An error occurred while processing the request.');
+                }
+            });
+        }
+
+        function showNotification(type, message) {
+            var bgColor = type === 'success' ? 'green' : 'red';
+            alert(message);
+        }
+
+</script>
+
+</body>
+</html>

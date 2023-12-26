@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Update Student</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+
+        .navbar-nav .nav-item .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-nav .nav-item.active .nav-link {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+
+        h2{
+            text-align: center;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('add_student_page') }}">Add Student</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('students_list') }}">Students List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+<div id ="update model{{student.std_id}}" class="container mt-5">
+    <center><h2 class="mb-4">Update Student Information</h2></center>
+    <form method="POST" action="{{ url_for('edit_button_action', student_id=student.std_id) }}">
+         {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+        <div class="form-group">
+            <input type="hidden" name="std_id" value="{{ student.std_id }}">
+            <label for="full_name">Full Name:</label>
+            <input type="text" class="form-control" id="full_name" name="full_name"  value="{{ student.full_name }}">
+        </div>
+
+        <div class="form-group">
+
+            <label for="roll_number">Roll Number:</label>
+            <input type="text" class="form-control" id="roll_number" name="roll_number"  value="{{ student.roll_number }}">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address:</label>
+            <input type="email" class="form-control" id="email" name="email"  value="{{student.email }}">
+        </div>
+
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select class="form-control" id="gender" name="gender">
+                <option value="male" {% if student.gender=='male' %}selected{% endif %}>Male</option>
+                <option value="female" {% if student.gender=='female' %}selected{% endif %}>Female</option>
+            </select>
+
+
+        </div>
+        <div class="form-group">
+        <label for="dob">Date of Birth:</label>
+            <input type="date" class="form-control" id="dob" name="dob" placeholder="DD/MM/YYYY" value="{{ student.dob }}">
+
+        </div>
+
+        <div class="form-group">
+            <label for="city">City:</label>
+            <select class="form-control" id="city" name="city">
+                <option value="Karachi" {% if student.city=='Karachi' %}selected{% endif %}>Karachi</option>
+                <option value="Lahore" {% if student.city=='Lahore' %}selected{% endif %}>Lahore</option>
+                <option value="Multan" {% if student.city=='Multan' %}selected{% endif %}>Multan</option>
+                <option value="Islamabad" {% if student.city=='Islamabad' %}selected{% endif %}>Islamabad</option>
+                <option value="Peshawar" {% if student.city=='Peshawar' %}selected{% endif %}>Peshawar</option>
+                <option value="Quetta" {% if student.city=='Quetta' %}selected{% endif %}>Quetta</option>
+                <option value="Faisalabad" {% if student.city=='Faisalabad' %}selected{% endif %}>Faisalabad</option>
+                <option value="Rawalpindi" {% if student.city=='Rawalpindi' %}selected{% endif %}>Rawalpindi</option>
+                <option value="Gujranwala" {% if student.city=='Gujranwala' %}selected{% endif %}>Gujranwala</option>
+                <option value="Sialkot" {% if student.city=='Sialkot' %}selected{% endif %}>Sialkot</option>
+                <option value="Hyderabad" {% if student.city=='Hyderabad' %}selected{% endif %}>Hyderabad</option>
+                <option value="Sargoda" {% if student.city=='Sargoda' %}selected{% endif %}>Sargoda</option>
+                <option value="Sahiwal" {% if student.city=='Sahiwal' %}selected{% endif %}>Sahiwal</option>
+                <option value="Sheikupura" {% if student.city=='Sheikupura' %}selected{% endif %}>Sheikupura</option>
+                <option value="RahimYarKhan" {% if student.city=="RahimYarKhan" %}selected{% endif %}>Rahim Yar Khan</option>
+                <option value="Kasur" {% if student.city=='Kasur' %}selected{% endif %}>Kasur</option>
+
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="interest">Interest:</label>
+            <select class="form-control" id="interest" name="interest">
+                {% for option in interest_options %}
+                    <option value="{{ option }}" {% if student.interest == option %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+                <option value="custom">Custom Interest</option>
+            </select>
+            <input type="text" class="form-control" id="custom_interest" name="custom_interest" placeholder="Enter custom interest" style="display: none;">
+        </div>
+
+        <div class="form-group">
+            <label for="department">Department:</label>
+            <select class="form-control" id="department" name="department">
+                <option value="it" {% if student.department=='it' %}selected{% endif %}>Information Technology</option>
+                <option value="cs" {% if student.department=='cs' %}selected{% endif %}>Computer Science</option>
+                <option value="se" {% if student.department=='se' %}selected{% endif %}>Software Engineering</option>
+                <option value="ds" {% if student.department=='ds' %}selected{% endif %}>Data Science</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="degree_title">Degree Title:</label>
+            <select class="form-control" id="degree_title" name="degree_title" >
+                <option value="AssociateDegree" {% if student.degree_title=='AssociateDegree' %}selected{% endif %}>Associate Degree</option>
+                <option value="BachelorsDegree" {% if student.degree_title=='BachelorsDegree' %}selected{% endif %}>Bachelors Degree</option>
+                <option value="AssociateDegree" {% if student.degree_title=='AssociateDegree' %}selected{% endif %}>M.Phil Degree Degree</option>
+                <option value="BachelorsDegree" {% if student.degree_title=='BachelorsDegree' %}selected{% endif %}>Post-Graduate Degree</option>
+                <option value="Doctorate" {% if student.degree_title=='Doctorate' %}selected{% endif %}>Associate Degree</option>
+                <option value="PostDoctorate" {% if student.degree_title=='PostDoctorate' %}selected{% endif %}>Bachelors Degree</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter subject" value="{{student.subject}}">
+        </div>
+        <div class="form-group">
+            <label for="start_date">Start Date:</label>
+            <input type="date" class="form-control" id="start_date" name="start_date" placeholder="DD/MM/YYYY" value="{{student.start_date}}">
+        </div>
+        <div class="form-group">
+            <label for="end_date">End Date:</label>
+           <input type="date" class="form-control" id="end_date" name="end_date" placeholder="DD/MM/YYYY" value="{{ student.end_date }}">
+
+        </div>
+
+         <div class="form-group">
+            <button type="submit" class="btn btn-success">Update</button>
+            <a href="{{ url_for('students_list') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
+<script>
+    //a script to toggle the display of the text field based on the selected option
+    document.getElementById("interest").addEventListener("change", function () {
+        var interestSelect = document.getElementById("interest");
+        var customInterestInput = document.getElementById("custom_interest");
+
+        if (interestSelect.value === "custom") {
+            customInterestInput.style.display = "block";
+        } else {
+            customInterestInput.style.display = "none";
+        }
+    });
+</script>
+</body>
+</html>

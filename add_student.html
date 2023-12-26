@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add Student</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+     <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+
+        .navbar-nav .nav-item .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-nav .nav-item.active .nav-link {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+
+        h2{
+            text-align: center;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('students_list') }}">Students List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Add Student</h2>
+    <form method="POST" action="{{ url_for('add_student') }}">
+         {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+        <div class="form-group">
+            <label for="full_name">Full Name:</label>
+            <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter full name">
+        </div>
+        <div class="form-group">
+            <label for="roll_number">Roll Number:</label>
+            <input type="text" class="form-control" id="roll_number" name="roll_number" placeholder="Enter roll number">
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address:</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address">
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select class="form-control" id="gender" name="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+        <label for="dob">Date of Birth:</label>
+            <input type="date" class="form-control" id="dob" name="dob" placeholder="DD/MM/YYYY">
+        </div>
+
+        <div class="form-group">
+            <label for="city">City:</label>
+            <select class="form-control" id="city" name="city">
+                <option value="Karachi">Karachi</option>
+                <option value="Lahore">Lahore</option>
+                <option value="Multan">Multan</option>
+                <option value="Islamabad">Islamabad</option>
+                <option value="Peshawar">Peshawar</option>
+                <option value="Quetta">Quetta</option>
+                <option value="Faisalabad">Faisalabad</option>
+                <option value="Rawalpindi">Rawalpindi</option>
+                <option value="Gujranwala">Gujranwala</option>
+                <option value="Sialkot">Sialkot</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Sargoda">Sargoda</option>
+                <option value="Sahiwal">Sahiwal</option>
+                <option value="Sheikupura">Sheikupura</option>
+                <option value="Rahim Yar Khan">Rahim Yar Khan</option>
+                <option value="Kasur">Kasur</option>
+
+            </select>
+        </div>
+       <div class="form-group">
+            <label for="interest">Interest:</label>
+            <select class="form-control" id="interest" name="interest">
+                {% for option in interest_options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+                <option value="custom">Custom Interest</option>
+            </select>
+            <!-- text input field for custom interest -->
+            <input type="text" class="form-control" id="custom_interest" name="custom_interest" placeholder="Enter custom interest" style="display: none;">
+       </div>
+
+
+
+        <div class="form-group">
+            <label for="department">Department:</label>
+            <select class="form-control" id="department" name="department">
+                <option value="Information Technology">Information Technology</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Software Engineering">Software Engineering</option>
+                <option value="Data Science">Data Science</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="degree_title">Degree Title:</label>
+            <select class="form-control" id="degree_title" name="degree_title">
+                <option value="Associate Degree">Associate Degree</option>
+                <option value="Bachelors Degree">Bachelors Degree</option>
+                <option value="Associate Degree">M.Phil Degree Degree</option>
+                <option value="Bachelors Degree">Post-Graduate Degree</option>
+                <option value="Doctorate">Associate Degree</option>
+                <option value="Post Doctorate">Bachelors Degree</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter subject">
+        </div>
+        <div class="form-group">
+            <label for="start_date">Start Date:</label>
+            <input type="date" class="form-control" id="start_date" name="start_date" placeholder="DD/MM/YYYY">
+        </div>
+        <div class="form-group">
+            <label for="end_date">End Date:</label>
+            <input type="date" class="form-control" id="end_date" name="end_date" placeholder="DD/MM/YYYY">
+        </div>
+
+         <div class="form-group">
+            <button type="submit" class="btn btn-success">Create</button>
+            <a href="{{ url_for('students_list') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var interestSelect = document.getElementById("interest");
+        var customInterestInput = document.getElementById("custom_interest");
+
+        interestSelect.addEventListener("change", function () {
+            if (interestSelect.value.toLowerCase() === "custom") {
+                customInterestInput.style.display = "block";
+            } else {
+                customInterestInput.style.display = "none";
+            }
+        });
+    });
+</script>
+
+
+</body>
+</html>
